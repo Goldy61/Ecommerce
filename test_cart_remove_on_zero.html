@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart Remove on Zero Test</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2d3748;
+            margin-bottom: 2rem;
+        }
+        
+        .feature-description {
+            background: #e6fffa;
+            border: 1px solid #38b2ac;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .feature-description h3 {
+            color: #234e52;
+            margin-bottom: 1rem;
+        }
+        
+        .test-instructions {
+            background: #fff5f5;
+            border: 1px solid #feb2b2;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .test-instructions h3 {
+            color: #c53030;
+            margin-bottom: 1rem;
+        }
+        
+        .cart-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+        
+        .cart-items {
+            background: #f7fafc;
+            border-radius: 10px;
+            padding: 1.5rem;
+        }
+        
+        .cart-item {
+            display: grid;
+            grid-template-columns: 80px 1fr auto auto auto;
+            gap: 1rem;
+            align-items: center;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid #e2e8f0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+        
+        .item-image {
+            width: 80px;
+            height: 80px;
+            background: #e2e8f0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #a0aec0;
+        }
+        
+        .item-details h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+            color: #2d3748;
+        }
+        
+        .item-price {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stock-info {
+            color: #38a169;
+            font-size: 0.9rem;
+        }
+        
+        .item-quantity label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #4a5568;
+        }
+        
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            border: 1px solid #e2e8f0;
+            border-radius: 5px;
+            overflow: hidden;
+            background: white;
+        }
+        
+        .quantity-btn {
+            background: #f7fafc;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            min-width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            font-size: 14px;
+        }
+        
+        .quantity-btn:hover:not(:disabled) {
+            background: #e2e8f0;
+            color: #667eea;
+        }
+        
+        .quantity-btn:active:not(:disabled) {
+            background: #cbd5e0;
+            transform: scale(0.95);
+        }
+        
+        .quantity-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #f7fafc !important;
+            color: #a0aec0 !important;
+            transform: none !important;
+        }
+        
+        .quantity-btn[data-processing="true"] {
+            background: #667eea !important;
+            color: white !important;
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+        
+        .quantity-input {
+            border: none;
+            padding: 8px;
+            width: 60px;
+            text-align: center;
+            font-weight: 500;
+            background: white;
+            border-left: 1px solid #e2e8f0;
+            border-right: 1px solid #e2e8f0;
+            font-size: 14px;
+        }
+        
+        .quantity-input:focus {
+            outline: none;
+            background: #fff;
+            box-shadow: inset 0 0 0 2px #667eea;
+        }
+        
+        .item-subtotal {
+            text-align: right;
+        }
+        
+        .subtotal-label {
+            display: block;
+            font-size: 0.9rem;
+            color: #718096;
+            margin-bottom: 0.25rem;
+        }
+        
+        .subtotal-amount {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #2d3748;
+        }
+        
+        .item-actions {
+            text-align: center;
+        }
+        
+        .btn-remove {
+            background: none;
+            border: none;
+            color: #e53e3e;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn-remove:hover {
+            background: #fed7d7;
+        }
+        
+        .cart-summary {
+            background: #f7fafc;
+            padding: 2rem;
+            border-radius: 10px;
+            height: fit-content;
+        }
+        
+        .summary-card h3 {
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: #2d3748;
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .summary-row:last-of-type {
+            border-bottom: none;
+        }
+        
+        .total-row {
+            font-size: 1.2rem;
+            font-weight: bold;
+            padding-top: 1rem;
+            margin-top: 1rem;
+            border-top: 2px solid #667eea;
+        }
+        
+        .log-section {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 2rem 0;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 0.875rem;
+        }
+        
+        .clear-btn {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+        
+        .empty-cart {
+            text-align: center;
+            padding: 3rem;
+            color: #718096;
+        }
+        
+        .empty-cart-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: #cbd5e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛒 Cart Remove on Zero Test</h1>
+        
+        <div class="feature-description">
+            <h3>✨ New Feature: Auto-Remove on Zero Quantity</h3>
+            <p><strong>Enhancement:</strong> When you click the minus (-) button and the quantity reaches 0, the item will be automatically removed from your cart after confirmation.</p>
+            <p><strong>Benefits:</strong> Cleaner cart management, intuitive user experience, no need for separate remove buttons.</p>
+        </div>
+        
+        <div class="test-instructions">
+            <h3>🧪 How to Test:</h3>
+            <ol>
+                <li><strong>Method 1:</strong> Click the minus (-) button until quantity reaches 0</li>
+                <li><strong>Method 2:</strong> Type "0" directly in the quantity input field</li>
+                <li><strong>Expected:</strong> Confirmation dialog appears asking if you want to remove the item</li>
+                <li><strong>Result:</strong> Item fades out and is removed from cart if confirmed</li>
+            </ol>
+        </div>
+        
+        <div class="cart-container">
+            <div class="cart-items">
+                <h2 style="margin-bottom: 1.5rem; color: #2d3748;">Shopping Cart Items</h2>
+                
+                <div id="cart-items-container">
+                    <!-- Cart items will be populated by JavaScript -->
+                </div>
+                
+                <div id="empty-cart" class="empty-cart" style="display: none;">
+                    <div class="empty-cart-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <h3>Your cart is empty</h3>
+                    <p>All items have been removed!</p>
+                </div>
+            </div>
+            
+            <div class="cart-summary">
+                <div class="summary-card">
+                    <h3>Order Summary</h3>
+                    
+                    <div class="summary-row">
+                        <span>Subtotal:</span>
+                        <span id="cart-subtotal">$0.00</span>
+                    </div>
+                    
+                    <div class="summary-row">
+                        <span>Tax (8%):</span>
+                        <span id="cart-tax">$0.00</span>
+                    </div>
+                    
+                    <div class="summary-row">
+                        <span>Shipping:</span>
+                        <span id="cart-shipping">$0.00</span>
+                    </div>
+                    
+                    <div class="summary-row total-row">
+                        <span><strong>Total:</strong></span>
+                        <span id="cart-total"><strong>$0.00</strong></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div>
+            <button class="clear-btn" onclick="clearLog()">Clear Log</button>
+            <div id="test-log" class="log-section"></div>
+        </div>
+    </div>
+
+    <script>
+        // Mock cart data
+        let mockCart = {
+            1: { id: 1, name: 'Smartphone X1', price: 699.99, quantity: 3, stock: 50, image: '📱' },
+            2: { id: 2, name: 'Laptop Pro', price: 1299.99, quantity: 2, stock: 25, image: '💻' },
+            3: { id: 3, name: 'Wireless Headphones', price: 199.99, quantity: 1, stock: 100, image: '🎧' }
+        };
+        
+        // Track ongoing requests
+        const ongoingRequests = new Map();
+        
+        // Global click throttling
+        let lastClickTime = 0;
+        const CLICK_THROTTLE_MS = 300;
+        
+        // Logging function
+        function log(message) {
+            const logElement = document.getElementById('test-log');
+            const timestamp = new Date().toLocaleTimeString();
+            logElement.innerHTML += `[${timestamp}] ${message}\n`;
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+        
+        function clearLog() {
+            document.getElementById('test-log').innerHTML = '';
+        }
+        
+        // Format currency
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD'
+            }).format(amount);
+        }
+        
+        // Show notification
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                color: white;
+                font-weight: 500;
+                z-index: 1000;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                background: ${type === 'success' ? '#38a169' : type === 'error' ? '#e53e3e' : type === 'warning' ? '#d69e2e' : '#3182ce'};
+            `;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+        
+        // Update cart display
+        function updateCartDisplay() {
+            const container = document.getElementById('cart-items-container');
+            const emptyCart = document.getElementById('empty-cart');
+            
+            const cartItems = Object.values(mockCart);
+            
+            if (cartItems.length === 0) {
+                container.innerHTML = '';
+                emptyCart.style.display = 'block';
+            } else {
+                emptyCart.style.display = 'none';
+                
+                const html = cartItems.map(item => `
+                    <div class="cart-item" data-product-id="${item.id}">
+                        <div class="item-image">${item.image}</div>
+                        
+                        <div class="item-details">
+                            <h3>${item.name}</h3>
+                            <p class="item-price" data-price="${item.price}">${formatCurrency(item.price)}</p>
+                            <p class="stock-info">In Stock (${item.stock} available)</p>
+                        </div>
+                        
+                        <div class="item-quantity">
+                            <label>Quantity:</label>
+                            <div class="quantity-controls">
+                                <button class="quantity-btn update-cart-btn" 
+                                        data-product-id="${item.id}" 
+                                        data-action="decrease">-</button>
+                                <input type="number" class="quantity-input" 
+                                       value="${item.quantity}" 
+                                       min="0" 
+                                       max="${item.stock}"
+                                       data-product-id="${item.id}"
+                                       data-original-value="${item.quantity}">
+                                <button class="quantity-btn update-cart-btn" 
+                                        data-product-id="${item.id}" 
+                                        data-action="increase">+</button>
+                            </div>
+                        </div>
+                        
+                        <div class="item-subtotal">
+                            <span class="subtotal-label">Subtotal:</span>
+                            <span class="subtotal-amount">${formatCurrency(item.price * item.quantity)}</span>
+                        </div>
+                        
+                        <div class="item-actions">
+                            <button class="btn-remove remove-cart-btn" 
+                                    data-product-id="${item.id}"
+                                    title="Remove from cart">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+                
+                container.innerHTML = html;
+            }
+            
+            updateCartTotals();
+            initializeCartButtons();
+        }
+        
+        // Update cart totals
+        function updateCartTotals() {
+            const cartItems = Object.values(mockCart);
+            const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const tax = subtotal * 0.08;
+            const shipping = subtotal > 0 ? 10.00 : 0;
+            const total = subtotal + tax + shipping;
+            
+            document.getElementById('cart-subtotal').textContent = formatCurrency(subtotal);
+            document.getElementById('cart-tax').textContent = formatCurrency(tax);
+            document.getElementById('cart-shipping').textContent = formatCurrency(shipping);
+            document.getElementById('cart-total').textContent = formatCurrency(total);
+        }
+        
+        // Initialize cart buttons
+        function initializeCartButtons() {
+            // Initialize update buttons
+            const updateButtons = document.querySelectorAll('.update-cart-btn');
+            updateButtons.forEach(button => {
+                button.addEventListener('click', handleCartUpdate);
+            });
+            
+            // Initialize quantity inputs
+            const quantityInputs = document.querySelectorAll('.quantity-input');
+            quantityInputs.forEach(input => {
+                input.addEventListener('change', handleQuantityChange);
+            });
+            
+            // Initialize remove buttons
+            const removeButtons = document.querySelectorAll('.remove-cart-btn');
+            removeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const productId = parseInt(this.getAttribute('data-product-id'));
+                    const productName = mockCart[productId]?.name || 'this item';
+                    
+                    if (confirm(`Remove ${productName} from your cart?`)) {
+                        removeFromCart(productId);
+                    }
+                });
+            });
+        }
+        
+        // Handle cart update button clicks
+        function handleCartUpdate(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+            
+            // Global throttling check
+            const now = Date.now();
+            if (now - lastClickTime < CLICK_THROTTLE_MS) {
+                log('❌ Click throttled - too fast');
+                return false;
+            }
+            lastClickTime = now;
+            
+            const button = event.target;
+            const productId = parseInt(button.getAttribute('data-product-id'));
+            const action = button.getAttribute('data-action');
+            
+            // Check if button is already processing
+            if (button.hasAttribute('data-processing')) {
+                log('❌ Button click ignored - already processing');
+                return false;
+            }
+            
+            // Mark button as processing
+            button.setAttribute('data-processing', 'true');
+            button.disabled = true;
+            
+            const quantityInput = document.querySelector(`input[data-product-id="${productId}"]`);
+            
+            if (!quantityInput || !mockCart[productId]) {
+                log(`❌ Product ${productId} not found`);
+                resetButton();
+                return false;
+            }
+            
+            let currentQuantity = mockCart[productId].quantity;
+            let newQuantity = currentQuantity;
+            
+            if (action === 'increase') {
+                const maxStock = mockCart[productId].stock;
+                if (currentQuantity < maxStock) {
+                    newQuantity = currentQuantity + 1;
+                } else {
+                    showNotification('Maximum quantity reached', 'warning');
+                    resetButton();
+                    return false;
+                }
+            } else if (action === 'decrease') {
+                if (currentQuantity > 0) {
+                    newQuantity = currentQuantity - 1;
+                    
+                    // Show confirmation for removal when quantity becomes 0
+                    if (newQuantity === 0) {
+                        const productName = mockCart[productId].name;
+                        if (!confirm(`Remove ${productName} from your cart?`)) {
+                            resetButton();
+                            return false;
+                        }
+                    }
+                } else {
+                    showNotification('Item quantity is already 0', 'warning');
+                    resetButton();
+                    return false;
+                }
+            }
+            
+            log(`🔄 ${action === 'increase' ? 'Increasing' : 'Decreasing'} quantity: ${currentQuantity} → ${newQuantity}`);
+            
+            // Update quantity
+            updateCartItem(productId, newQuantity, quantityInput, resetButton);
+            
+            function resetButton() {
+                setTimeout(() => {
+                    button.disabled = false;
+                    button.removeAttribute('data-processing');
+                }, 300);
+            }
+            
+            return false;
+        }
+        
+        // Handle quantity input changes
+        function handleQuantityChange(event) {
+            const input = event.target;
+            const productId = parseInt(input.getAttribute('data-product-id'));
+            const quantity = parseInt(input.value);
+            
+            // Handle empty or invalid input
+            if (isNaN(quantity)) {
+                input.value = input.getAttribute('data-original-value') || 1;
+                return;
+            }
+            
+            // Validate quantity
+            const maxQuantity = mockCart[productId]?.stock || 999;
+            let validQuantity = Math.max(0, Math.min(quantity, maxQuantity));
+            
+            // Show confirmation for removal when quantity becomes 0
+            if (validQuantity === 0 && mockCart[productId]) {
+                const productName = mockCart[productId].name;
+                if (!confirm(`Remove ${productName} from your cart?`)) {
+                    input.value = input.getAttribute('data-original-value') || 1;
+                    return;
+                }
+            }
+            
+            // Update input if needed
+            if (validQuantity !== quantity) {
+                input.value = validQuantity;
+            }
+            
+            // Update cart if quantity changed
+            const originalValue = parseInt(input.getAttribute('data-original-value')) || 1;
+            if (validQuantity !== originalValue) {
+                updateCartItem(productId, validQuantity, input);
+            }
+        }
+        
+        // Update cart item
+        function updateCartItem(productId, quantity, inputElement, callback) {
+            log(`📦 Updating cart: Product ${productId}, Quantity ${quantity}`);
+            
+            if (quantity === 0) {
+                // Remove item
+                removeFromCart(productId);
+            } else {
+                // Update quantity
+                mockCart[productId].quantity = quantity;
+                inputElement.setAttribute('data-original-value', quantity);
+                updateCartDisplay();
+                showNotification(`Updated quantity to ${quantity}`, 'success');
+                log(`✅ Updated product ${productId} quantity to ${quantity}`);
+            }
+            
+            if (callback) callback();
+        }
+        
+        // Remove from cart
+        function removeFromCart(productId) {
+            const productName = mockCart[productId]?.name || `Product ${productId}`;
+            
+            log(`🗑️ Removing product ${productId} (${productName}) from cart`);
+            
+            // Find and animate removal
+            const cartRow = document.querySelector(`[data-product-id="${productId}"]`);
+            if (cartRow) {
+                cartRow.style.opacity = '0';
+                setTimeout(() => {
+                    delete mockCart[productId];
+                    updateCartDisplay();
+                    showNotification(`${productName} removed from cart`, 'success');
+                    log(`✅ Product ${productId} removed successfully`);
+                }, 300);
+            } else {
+                delete mockCart[productId];
+                updateCartDisplay();
+                showNotification(`${productName} removed from cart`, 'success');
+                log(`✅ Product ${productId} removed successfully`);
+            }
+        }
+        
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCartDisplay();
+            
+            log('🚀 Cart Remove on Zero test initialized');
+            log('📋 Test the new feature:');
+            log('1. Click minus (-) button until quantity reaches 0');
+            log('2. Or type "0" directly in quantity input');
+            log('3. Confirm removal when prompted');
+            log('4. Watch item fade out and disappear');
+            log('');
+        });
+    </script>
+</body>
+</html>

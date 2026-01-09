@@ -1,0 +1,8 @@
+<svg width="300" height="200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="300" height="200" fill="#48bb78"/>
+  <polygon points="150,60 100,100 200,100" fill="white"/>
+  <rect x="120" y="100" width="60" height="50" fill="white"/>
+  <rect x="135" y="115" width="10" height="20" fill="#48bb78"/>
+  <rect x="155" y="110" width="15" height="15" fill="#48bb78"/>
+  <text x="150" y="180" text-anchor="middle" fill="white" font-family="Arial" font-size="16" font-weight="bold">Home &amp; Garden</text>
+</svg>

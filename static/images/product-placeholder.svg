@@ -1,0 +1,10 @@
+<svg width="300" height="200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="300" height="200" fill="#f7fafc"/>
+  <rect x="1" y="1" width="298" height="198" fill="none" stroke="#e2e8f0" stroke-width="2" stroke-dasharray="5,5"/>
+  <circle cx="150" cy="80" r="25" fill="#cbd5e0"/>
+  <path d="M135 70 L165 70 L165 90 L135 90 Z" fill="white"/>
+  <circle cx="145" cy="75" r="3" fill="#cbd5e0"/>
+  <polygon points="140,85 155,75 160,85" fill="#cbd5e0"/>
+  <text x="150" y="120" text-anchor="middle" fill="#a0aec0" font-family="Arial" font-size="14" font-weight="bold">Product Image</text>
+  <text x="150" y="140" text-anchor="middle" fill="#cbd5e0" font-family="Arial" font-size="12">Coming Soon</text>
+</svg>

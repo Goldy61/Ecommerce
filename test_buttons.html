@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart Button Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+            background: white;
+            width: fit-content;
+            margin: 10px 0;
+        }
+
+        .quantity-btn {
+            background: #f8f9fa;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            min-width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            font-size: 14px;
+            position: relative;
+        }
+
+        .quantity-btn:hover:not(:disabled) {
+            background: #e9ecef;
+            color: #007bff;
+        }
+
+        .quantity-btn:active:not(:disabled) {
+            background: #dee2e6;
+            transform: scale(0.95);
+        }
+
+        .quantity-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #f8f9fa !important;
+            color: #6c757d !important;
+            transform: none !important;
+        }
+
+        .quantity-btn[data-processing="true"] {
+            background: #007bff !important;
+            color: white !important;
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+
+        .quantity-input {
+            border: none;
+            padding: 8px;
+            width: 60px;
+            text-align: center;
+            font-weight: 500;
+            background: white;
+            border-left: 1px solid #ddd;
+            border-right: 1px solid #ddd;
+            font-size: 14px;
+        }
+
+        .quantity-input:focus {
+            outline: none;
+            background: #fff;
+            box-shadow: inset 0 0 0 2px #007bff;
+        }
+        
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .clear-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Cart Button Test Page</h1>
+    
+    <div class="test-section">
+        <h2>Test 1: Basic Quantity Controls</h2>
+        <p>Try clicking the + and - buttons rapidly to test double-click prevention:</p>
+        
+        <div class="quantity-controls">
+            <button class="quantity-btn" data-product-id="1" data-action="decrease">-</button>
+            <input type="number" class="quantity-input" value="1" min="1" max="10" data-product-id="1">
+            <button class="quantity-btn" data-product-id="1" data-action="increase">+</button>
+        </div>
+        
+        <p>Current quantity: <span id="current-qty-1">1</span></p>
+        <p>Click count: <span id="click-count-1">0</span></p>
+        <p>Update count: <span id="update-count-1">0</span></p>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 2: Multiple Products</h2>
+        <p>Test with multiple products to ensure no interference:</p>
+        
+        <div style="margin: 10px 0;">
+            <strong>Product A:</strong>
+            <div class="quantity-controls">
+                <button class="quantity-btn" data-product-id="2" data-action="decrease">-</button>
+                <input type="number" class="quantity-input" value="2" min="1" max="5" data-product-id="2">
+                <button class="quantity-btn" data-product-id="2" data-action="increase">+</button>
+            </div>
+            Quantity: <span id="current-qty-2">2</span>, Clicks: <span id="click-count-2">0</span>
+        </div>
+        
+        <div style="margin: 10px 0;">
+            <strong>Product B:</strong>
+            <div class="quantity-controls">
+                <button class="quantity-btn" data-product-id="3" data-action="decrease">-</button>
+                <input type="number" class="quantity-input" value="1" min="1" max="8" data-product-id="3">
+                <button class="quantity-btn" data-product-id="3" data-action="increase">+</button>
+            </div>
+            Quantity: <span id="current-qty-3">1</span>, Clicks: <span id="click-count-3">0</span>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>📋 Event Log</h2>
+        <button class="clear-btn" onclick="clearLog()">Clear Log</button>
+        <div id="event-log" class="log"></div>
+    </div>
+
+    <script>
+        // Track ongoing requests to prevent duplicates
+        const ongoingRequests = new Map();
+        
+        // Global click throttling
+        let lastClickTime = 0;
+        const CLICK_THROTTLE_MS = 300;
+        
+        // Counters for testing
+        const clickCounts = {};
+        const updateCounts = {};
+        
+        function log(message) {
+            const logElement = document.getElementById('event-log');
+            const timestamp = new Date().toLocaleTimeString();
+            logElement.innerHTML += `[${timestamp}] ${message}\n`;
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+        
+        function clearLog() {
+            document.getElementById('event-log').innerHTML = '';
+        }
+        
+        function updateDisplay(productId) {
+            const qtyElement = document.getElementById(`current-qty-${productId}`);
+            const clickElement = document.getElementById(`click-count-${productId}`);
+            const updateElement = document.getElementById(`update-count-${productId}`);
+            const input = document.querySelector(`input[data-product-id="${productId}"]`);
+            
+            if (qtyElement && input) {
+                qtyElement.textContent = input.value;
+            }
+            if (clickElement) {
+                clickElement.textContent = clickCounts[productId] || 0;
+            }
+            if (updateElement) {
+                updateElement.textContent = updateCounts[productId] || 0;
+            }
+        }
+        
+        function handleCartUpdate(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+            
+            // Global throttling check
+            const now = Date.now();
+            if (now - lastClickTime < CLICK_THROTTLE_MS) {
+                log('❌ Click throttled - too fast');
+                return false;
+            }
+            lastClickTime = now;
+            
+            const button = event.target;
+            const productId = button.getAttribute('data-product-id');
+            const action = button.getAttribute('data-action');
+            
+            // Initialize counters
+            if (!clickCounts[productId]) clickCounts[productId] = 0;
+            if (!updateCounts[productId]) updateCounts[productId] = 0;
+            
+            clickCounts[productId]++;
+            
+            log(`🖱️ Button clicked: Product ${productId}, Action: ${action}, Click #${clickCounts[productId]}`);
+            
+            // Check if button is already processing
+            if (button.hasAttribute('data-processing')) {
+                log('❌ Button click ignored - already processing');
+                return false;
+            }
+            
+            // Mark button as processing
+            button.setAttribute('data-processing', 'true');
+            button.disabled = true;
+            
+            const quantityInput = document.querySelector(`input[data-product-id="${productId}"]`);
+            
+            if (!quantityInput) {
+                log(`❌ Quantity input not found for product: ${productId}`);
+                resetButton();
+                return false;
+            }
+            
+            let currentQuantity = parseInt(quantityInput.value) || 1;
+            let newQuantity = currentQuantity;
+            
+            if (action === 'increase') {
+                const maxStock = parseInt(quantityInput.getAttribute('max')) || 999;
+                if (currentQuantity < maxStock) {
+                    newQuantity = currentQuantity + 1;
+                } else {
+                    log(`⚠️ Maximum quantity reached for product ${productId}`);
+                    resetButton();
+                    return false;
+                }
+            } else if (action === 'decrease') {
+                if (currentQuantity > 1) {
+                    newQuantity = currentQuantity - 1;
+                } else {
+                    log(`⚠️ Minimum quantity is 1 for product ${productId}`);
+                    resetButton();
+                    return false;
+                }
+            }
+            
+            // Update the input value immediately
+            quantityInput.value = newQuantity;
+            updateCounts[productId]++;
+            
+            log(`✅ Quantity updated: Product ${productId}, ${currentQuantity} → ${newQuantity}, Update #${updateCounts[productId]}`);
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                log(`📡 Simulated API call completed for product ${productId}`);
+                resetButton();
+                updateDisplay(productId);
+            }, 500);
+            
+            function resetButton() {
+                setTimeout(() => {
+                    button.disabled = false;
+                    button.removeAttribute('data-processing');
+                }, 100);
+            }
+            
+            return false;
+        }
+        
+        // Initialize event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            const updateButtons = document.querySelectorAll('.quantity-btn');
+            
+            updateButtons.forEach(button => {
+                button.addEventListener('click', handleCartUpdate);
+            });
+            
+            // Initialize displays
+            [1, 2, 3].forEach(productId => {
+                updateDisplay(productId);
+            });
+            
+            log('🚀 Cart button test page initialized');
+            log(`📊 Found ${updateButtons.length} quantity buttons`);
+        });
+    </script>
+</body>
+</html>

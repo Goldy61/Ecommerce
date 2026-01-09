@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification System - Complete</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .success {
+            color: #28a745;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+        .feature-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-left: 4px solid #007bff;
+            margin: 20px 0;
+        }
+        .test-link {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 10px 10px 10px 0;
+            transition: background 0.3s;
+            font-weight: bold;
+        }
+        .test-link:hover {
+            background: #0056b3;
+        }
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            color: #856404;
+        }
+        .info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            color: #0c5460;
+        }
+        .flow-step {
+            background: #e7f3ff;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+        .flow-step h4 {
+            margin: 0 0 10px 0;
+            color: #007bff;
+        }
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        .demo-otp {
+            background: #007bff;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            border-radius: 8px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 3px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>✅ Email Verification System - Complete Implementation</h1>
+        
+        <div class="success">
+            🎉 Email verification with OTP system has been successfully implemented!
+        </div>
+
+        <div class="info">
+            <h3>📧 Test Mode Active</h3>
+            <p>The system is currently using <strong>Mock Email Service</strong> for testing. Emails will be displayed in the Flask console instead of being sent to real email addresses.</p>
+        </div>
+
+        <div class="feature-section">
+            <h3>🚀 Implemented Features:</h3>
+            <ul>
+                <li>✅ <strong>Database Schema</strong> - Added email verification columns to users table</li>
+                <li>✅ <strong>OTP Generation</strong> - 6-digit random codes with 15-minute expiration</li>
+                <li>✅ <strong>Email Templates</strong> - Professional HTML email templates</li>
+                <li>✅ <strong>Verification Flow</strong> - Complete registration → email → OTP → login flow</li>
+                <li>✅ <strong>Security Features</strong> - Attempt limits, expiration, token validation</li>
+                <li>✅ <strong>User Interface</strong> - Modern verification page with real-time feedback</li>
+                <li>✅ <strong>Resend Functionality</strong> - Users can request new OTP codes</li>
+                <li>✅ <strong>Logging System</strong> - Track all verification attempts and status</li>
+            </ul>
+        </div>
+
+        <div class="feature-section">
+            <h3>🔄 Registration & Verification Flow:</h3>
+            
+            <div class="flow-step">
+                <h4>Step 1: User Registration</h4>
+                <p>User fills out registration form → Account created (unverified) → OTP email sent</p>
+            </div>
+            
+            <div class="flow-step">
+                <h4>Step 2: Email Verification</h4>
+                <p>User receives email with 6-digit OTP code → Enters code on verification page</p>
+            </div>
+            
+            <div class="flow-step">
+                <h4>Step 3: Account Activation</h4>
+                <p>Valid OTP → Email marked as verified → User can now login</p>
+            </div>
+            
+            <div class="flow-step">
+                <h4>Step 4: Login Protection</h4>
+                <p>Unverified users cannot login → Redirected to verification page</p>
+            </div>
+        </div>
+
+        <div class="warning">
+            <h4>⚠️ Important Security Features:</h4>
+            <ul>
+                <li><strong>OTP Expiration:</strong> Codes expire after 15 minutes</li>
+                <li><strong>Attempt Limits:</strong> Maximum 5 failed attempts per OTP</li>
+                <li><strong>Login Blocking:</strong> Unverified users cannot access the system</li>
+                <li><strong>Token Validation:</strong> Secure verification tokens for email links</li>
+            </ul>
+        </div>
+
+        <h3>🧪 Test the Email Verification System:</h3>
+        
+        <a href="http://localhost:5000/register" class="test-link" target="_blank">
+            📝 Register New User
+        </a>
+        <a href="http://localhost:5000/login" class="test-link" target="_blank">
+            🔐 Login Page
+        </a>
+        <a href="http://localhost:5000/" class="test-link" target="_blank">
+            🏠 Homepage
+        </a>
+
+        <div class="feature-section">
+            <h3>📋 Testing Instructions:</h3>
+            <ol>
+                <li><strong>Register a new user</strong> - Fill out the registration form</li>
+                <li><strong>Check Flask console</strong> - You'll see the OTP email logged</li>
+                <li><strong>Copy the OTP code</strong> - From the console output</li>
+                <li><strong>Enter OTP</strong> - On the verification page</li>
+                <li><strong>Login</strong> - With your verified account</li>
+            </ol>
+        </div>
+
+        <div class="info">
+            <h4>🔍 What to Look For:</h4>
+            <p>When you register a new user, check your Flask application console. You'll see output like this:</p>
+            
+            <div class="code-block">
+====================================================<br>
+📧 EMAIL VERIFICATION (TEST MODE)<br>
+====================================================<br>
+To: user@example.com<br>
+Subject: Verify Your Email Address - E-Commerce Store<br>
+<br>
+Hi John,<br>
+<br>
+Welcome to E-Commerce Store!<br>
+<br>
+Please verify your email address by entering this OTP code:<br>
+<br>
+🔢 OTP CODE: 123456<br>
+<br>
+This code will expire in 15 minutes.<br>
+====================================================
+            </div>
+            
+            <p>Copy the OTP code and use it on the verification page!</p>
+        </div>
+
+        <div class="demo-otp">
+            Example OTP: 123456
+        </div>
+
+        <div class="feature-section">
+            <h3>🛠️ Database Changes Made:</h3>
+            <ul>
+                <li><code>is_email_verified</code> - Boolean flag for verification status</li>
+                <li><code>email_verification_token</code> - Secure token for email links</li>
+                <li><code>email_verification_otp</code> - 6-digit OTP code</li>
+                <li><code>otp_expires_at</code> - Expiration timestamp</li>
+                <li><code>otp_attempts</code> - Failed attempt counter</li>
+                <li><code>email_verification_logs</code> - New table for tracking verification events</li>
+            </ul>
+        </div>
+
+        <div class="feature-section">
+            <h3>📁 New Files Created:</h3>
+            <ul>
+                <li><code>utils/email_service.py</code> - Production email service</li>
+                <li><code>utils/mock_email_service.py</code> - Testing email service</li>
+                <li><code>templates/verify_email.html</code> - Email verification page</li>
+                <li><code>email_config.py</code> - Email configuration settings</li>
+                <li><code>database/email_verification_update.sql</code> - Database schema updates</li>
+            </ul>
+        </div>
+
+        <div class="warning">
+            <h4>🔧 For Production Use:</h4>
+            <ol>
+                <li>Update <code>email_config.py</code> with real email credentials</li>
+                <li>Change import in <code>routes/auth.py</code> from mock_email_service to email_service</li>
+                <li>Set up Gmail App Password or other SMTP service</li>
+                <li>Test with real email addresses</li>
+            </ol>
+        </div>
+
+        <div class="success">
+            🎯 The email verification system is fully functional and ready for testing!<br>
+            Users must verify their email before they can login to the system.
+        </div>
+    </div>
+
+    <script>
+        // Check if server is running
+        fetch('http://localhost:5000/')
+            .then(response => {
+                if (response.ok) {
+                    document.querySelector('.success').innerHTML += '<br>🟢 Server is running - ready to test!';
+                }
+            })
+            .catch(error => {
+                document.querySelector('.success').innerHTML += '<br>🔴 Server not running - start Flask app first';
+            });
+    </script>
+</body>
+</html>

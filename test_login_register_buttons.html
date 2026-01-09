@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Register Buttons Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .success {
+            color: #28a745;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+        .test-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-left: 4px solid #007bff;
+            margin: 20px 0;
+        }
+        .test-link {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 10px 10px 10px 0;
+            transition: background 0.3s;
+            font-weight: bold;
+        }
+        .test-link:hover {
+            background: #0056b3;
+        }
+        .demo-buttons {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin: 20px 0;
+            padding: 20px;
+            background: #e7f3ff;
+            border-radius: 8px;
+        }
+        .demo-login, .demo-register {
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 80px;
+        }
+        .demo-login {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+        .demo-login:hover {
+            background: rgba(102, 126, 234, 0.2);
+        }
+        .demo-register {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: 1px solid transparent;
+        }
+        .demo-register:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        .features {
+            background: #d4edda;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>✅ Login & Register Buttons - Side by Side</h1>
+        
+        <div class="success">
+            🎉 Login and Register buttons are now properly positioned side by side!
+        </div>
+
+        <div class="test-section">
+            <h3>🎯 What Was Updated:</h3>
+            <ul>
+                <li>✅ Added <code>.user-menu</code> container with flexbox layout</li>
+                <li>✅ Set proper gap between buttons (0.75rem)</li>
+                <li>✅ Enhanced button padding and sizing</li>
+                <li>✅ Added responsive design for mobile devices</li>
+                <li>✅ Ensured buttons don't wrap on small screens</li>
+            </ul>
+        </div>
+
+        <div class="test-section">
+            <h3>👀 Button Preview:</h3>
+            <p>Here's how the buttons look side by side:</p>
+            <div class="demo-buttons">
+                <span style="margin-right: 20px; color: #666;">User Actions:</span>
+                <a href="#" class="demo-login">Login</a>
+                <a href="#" class="demo-register">Register</a>
+            </div>
+        </div>
+
+        <div class="features">
+            <h4>🚀 Enhanced Features:</h4>
+            <ul>
+                <li><strong>Flexbox Layout:</strong> Buttons use modern CSS flexbox for perfect alignment</li>
+                <li><strong>Consistent Spacing:</strong> 0.75rem gap between buttons</li>
+                <li><strong>Responsive Design:</strong> Smaller padding and gap on mobile devices</li>
+                <li><strong>Hover Effects:</strong> Smooth transitions and visual feedback</li>
+                <li><strong>Accessibility:</strong> Proper contrast and touch-friendly sizing</li>
+            </ul>
+        </div>
+
+        <div class="test-section">
+            <h3>🧪 Test the Updated Buttons:</h3>
+            <p>Visit your website to see the login and register buttons side by side in the header:</p>
+            
+            <a href="http://localhost:5000/" class="test-link" target="_blank">
+                🏠 View Homepage
+            </a>
+            <a href="http://localhost:5000/login" class="test-link" target="_blank">
+                🔐 Login Page
+            </a>
+            <a href="http://localhost:5000/register" class="test-link" target="_blank">
+                📝 Register Page
+            </a>
+        </div>
+
+        <div class="test-section">
+            <h3>📱 Mobile Responsive:</h3>
+            <ul>
+                <li>Buttons maintain side-by-side layout on mobile</li>
+                <li>Reduced padding for better fit on small screens</li>
+                <li>Smaller gap (0.5rem) on mobile devices</li>
+                <li>Touch-friendly button sizes</li>
+            </ul>
+        </div>
+
+        <div class="test-section">
+            <h3>🎨 Button Styling:</h3>
+            <ul>
+                <li><strong>Login Button:</strong> Light blue background with blue text</li>
+                <li><strong>Register Button:</strong> Gradient background (blue to purple)</li>
+                <li><strong>Hover Effects:</strong> Color changes and subtle animations</li>
+                <li><strong>Consistent Size:</strong> Both buttons have minimum width for balance</li>
+            </ul>
+        </div>
+
+        <div class="success">
+            🎯 The login and register buttons are now perfectly positioned side by side!<br>
+            Visit your website to see the updated header layout.
+        </div>
+    </div>
+
+    <script>
+        // Check if server is running
+        fetch('http://localhost:5000/')
+            .then(response => {
+                if (response.ok) {
+                    document.querySelector('.success').innerHTML += '<br>🟢 Server is running - ready to test!';
+                }
+            })
+            .catch(error => {
+                document.querySelector('.success').innerHTML += '<br>🔴 Server not running - start Flask app first';
+            });
+    </script>
+</body>
+</html>

@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Autocomplete Test</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2d3748;
+            margin-bottom: 2rem;
+        }
+        
+        .search-demo {
+            margin: 2rem 0;
+        }
+        
+        .search-form {
+            display: flex;
+            align-items: center;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 25px;
+            padding: 8px 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 1rem;
+        }
+
+        .search-form:focus-within {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .search-input-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .search-form input {
+            border: none;
+            background: none;
+            outline: none;
+            padding: 4px 8px;
+            width: 100%;
+            font-size: 1rem;
+            color: #2d3748;
+        }
+
+        .search-form input::placeholder {
+            color: #a0aec0;
+        }
+
+        .search-form button {
+            background: none;
+            border: none;
+            color: #667eea;
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 4px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .search-form button:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .search-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+        }
+
+        .search-suggestions.show {
+            display: block;
+        }
+
+        .search-suggestion-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            border-bottom: 1px solid #f7fafc;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: background-color 0.2s ease;
+        }
+
+        .search-suggestion-item:hover,
+        .search-suggestion-item.highlighted {
+            background-color: #f7fafc;
+        }
+
+        .search-suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .suggestion-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 4px;
+            object-fit: cover;
+            background: #f7fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #a0aec0;
+        }
+
+        .suggestion-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .suggestion-name {
+            font-weight: 500;
+            color: #2d3748;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .suggestion-category {
+            font-size: 0.875rem;
+            color: #718096;
+        }
+
+        .suggestion-price {
+            font-weight: 600;
+            color: #667eea;
+            font-size: 0.9rem;
+        }
+
+        .search-no-results {
+            padding: 16px;
+            text-align: center;
+            color: #718096;
+            font-style: italic;
+        }
+
+        .search-loading {
+            padding: 16px;
+            text-align: center;
+            color: #667eea;
+        }
+
+        .search-loading i {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .instructions {
+            background: #f7fafc;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+        }
+        
+        .instructions h3 {
+            color: #2d3748;
+            margin-bottom: 1rem;
+        }
+        
+        .instructions ul {
+            color: #4a5568;
+            line-height: 1.6;
+        }
+        
+        .test-queries {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+        
+        .test-query {
+            background: #667eea;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+        }
+        
+        .test-query:hover {
+            background: #5a67d8;
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Search Autocomplete Test</h1>
+        
+        <div class="instructions">
+            <h3>How to Test:</h3>
+            <ul>
+                <li>Type any letter or word in the search box below</li>
+                <li>Suggestions will appear after typing 1+ characters</li>
+                <li>Use arrow keys to navigate suggestions</li>
+                <li>Press Enter to select or Escape to close</li>
+                <li>Click on any suggestion to select it</li>
+            </ul>
+            
+            <div class="test-queries">
+                <span>Try these:</span>
+                <div class="test-query" onclick="testSearch('s')">s</div>
+                <div class="test-query" onclick="testSearch('phone')">phone</div>
+                <div class="test-query" onclick="testSearch('laptop')">laptop</div>
+                <div class="test-query" onclick="testSearch('coffee')">coffee</div>
+                <div class="test-query" onclick="testSearch('book')">book</div>
+            </div>
+        </div>
+        
+        <div class="search-demo">
+            <form class="search-form" onsubmit="handleSearch(event)">
+                <div class="search-input-container">
+                    <input type="text" 
+                           id="search-input"
+                           placeholder="Type to search products..." 
+                           autocomplete="off">
+                    <button type="submit"><i class="fas fa-search"></i></button>
+                    <div id="search-suggestions" class="search-suggestions"></div>
+                </div>
+            </form>
+        </div>
+        
+        <div id="search-results" style="margin-top: 2rem;"></div>
+        
+        <div class="instructions">
+            <h3>✅ Features Implemented:</h3>
+            <ul>
+                <li>✅ Real-time search as you type (1+ characters)</li>
+                <li>✅ Debounced API calls (300ms delay)</li>
+                <li>✅ Keyboard navigation (Arrow keys, Enter, Escape)</li>
+                <li>✅ Click to select suggestions</li>
+                <li>✅ Loading states and error handling</li>
+                <li>✅ Product images, names, categories, and prices</li>
+                <li>✅ Highlighted search terms</li>
+                <li>✅ Responsive design</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Mock data for testing (replace with real API calls)
+        const mockProducts = [
+            { id: 1, name: 'Smartphone X1', price: 699.99, category_name: 'Electronics', image_url: 'smartphone.jpg' },
+            { id: 2, name: 'Laptop Pro', price: 1299.99, category_name: 'Electronics', image_url: 'laptop.jpg' },
+            { id: 3, name: 'Coffee Maker', price: 89.99, category_name: 'Kitchen', image_url: 'coffee_maker.jpg' },
+            { id: 4, name: 'Wireless Headphones', price: 199.99, category_name: 'Electronics', image_url: 'headphones.jpg' },
+            { id: 5, name: 'Smart Watch', price: 299.99, category_name: 'Electronics', image_url: 'smartwatch.jpg' },
+            { id: 6, name: 'Bluetooth Speaker', price: 79.99, category_name: 'Electronics', image_url: 'speaker.jpg' },
+            { id: 7, name: 'Gaming Mouse', price: 49.99, category_name: 'Electronics', image_url: 'mouse.jpg' },
+            { id: 8, name: 'Mechanical Keyboard', price: 129.99, category_name: 'Electronics', image_url: 'keyboard.jpg' },
+            { id: 9, name: 'Fitness Tracker', price: 149.99, category_name: 'Health', image_url: 'fitness_tracker.jpg' },
+            { id: 10, name: 'Tablet', price: 399.99, category_name: 'Electronics', image_url: 'tablet.jpg' },
+            { id: 11, name: 'Digital Camera', price: 599.99, category_name: 'Electronics', image_url: 'camera.jpg' },
+            { id: 12, name: 'Portable Charger', price: 29.99, category_name: 'Electronics', image_url: 'charger.jpg' },
+            { id: 13, name: 'Desk Lamp', price: 39.99, category_name: 'Home', image_url: 'lamp.jpg' },
+            { id: 14, name: 'Office Chair', price: 199.99, category_name: 'Furniture', image_url: 'chair.jpg' },
+            { id: 15, name: 'Book: JavaScript Guide', price: 24.99, category_name: 'Books', image_url: 'book.jpg' }
+        ];
+        
+        let currentRequest = null;
+        let selectedIndex = -1;
+        let suggestions = [];
+        
+        const searchInput = document.getElementById('search-input');
+        const suggestionsContainer = document.getElementById('search-suggestions');
+        const resultsContainer = document.getElementById('search-results');
+        
+        // Debounce function
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+        
+        // Debounced search function
+        const debouncedSearch = debounce(performSearch, 300);
+        
+        // Input event listener
+        searchInput.addEventListener('input', function(e) {
+            const query = e.target.value.trim();
+            
+            if (query.length === 0) {
+                hideSuggestions();
+                return;
+            }
+            
+            if (query.length >= 1) {
+                debouncedSearch(query);
+            }
+        });
+        
+        // Keyboard navigation
+        searchInput.addEventListener('keydown', function(e) {
+            if (!suggestionsContainer.classList.contains('show')) return;
+            
+            switch(e.key) {
+                case 'ArrowDown':
+                    e.preventDefault();
+                    selectedIndex = Math.min(selectedIndex + 1, suggestions.length - 1);
+                    updateSelection();
+                    break;
+                    
+                case 'ArrowUp':
+                    e.preventDefault();
+                    selectedIndex = Math.max(selectedIndex - 1, -1);
+                    updateSelection();
+                    break;
+                    
+                case 'Enter':
+                    e.preventDefault();
+                    if (selectedIndex >= 0 && suggestions[selectedIndex]) {
+                        selectSuggestion(suggestions[selectedIndex]);
+                    } else {
+                        handleSearch(e);
+                    }
+                    break;
+                    
+                case 'Escape':
+                    hideSuggestions();
+                    searchInput.blur();
+                    break;
+            }
+        });
+        
+        // Click outside to close
+        document.addEventListener('click', function(e) {
+            if (!searchInput.contains(e.target) && !suggestionsContainer.contains(e.target)) {
+                hideSuggestions();
+            }
+        });
+        
+        // Focus event
+        searchInput.addEventListener('focus', function() {
+            const query = this.value.trim();
+            if (query.length >= 1 && suggestions.length > 0) {
+                showSuggestions();
+            }
+        });
+        
+        // Mock search function (replace with real API call)
+        function performSearch(query) {
+            showLoadingState();
+            
+            // Simulate API delay
+            setTimeout(() => {
+                const filtered = mockProducts.filter(product => 
+                    product.name.toLowerCase().includes(query.toLowerCase()) ||
+                    product.category_name.toLowerCase().includes(query.toLowerCase())
+                );
+                
+                suggestions = filtered.slice(0, 8);
+                displaySuggestions(suggestions, query);
+            }, 200);
+        }
+        
+        function displaySuggestions(products, query) {
+            selectedIndex = -1;
+            
+            if (products.length === 0) {
+                showNoResults(query);
+                return;
+            }
+            
+            const html = products.map((product, index) => {
+                return `
+                    <div class="search-suggestion-item" data-index="${index}" data-product-id="${product.id}">
+                        <div class="suggestion-image">📦</div>
+                        <div class="suggestion-content">
+                            <div class="suggestion-name">${highlightMatch(product.name, query)}</div>
+                            <div class="suggestion-category">${product.category_name}</div>
+                        </div>
+                        <div class="suggestion-price">$${product.price.toFixed(2)}</div>
+                    </div>
+                `;
+            }).join('');
+            
+            suggestionsContainer.innerHTML = html;
+            showSuggestions();
+            
+            // Add click listeners
+            suggestionsContainer.querySelectorAll('.search-suggestion-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const productId = this.getAttribute('data-product-id');
+                    const product = products.find(p => p.id == productId);
+                    if (product) {
+                        selectSuggestion(product);
+                    }
+                });
+            });
+        }
+        
+        function showLoadingState() {
+            suggestionsContainer.innerHTML = `
+                <div class="search-loading">
+                    <i class="fas fa-spinner fa-spin"></i> Searching...
+                </div>
+            `;
+            showSuggestions();
+        }
+        
+        function showNoResults(query) {
+            suggestionsContainer.innerHTML = `
+                <div class="search-no-results">
+                    No products found for "${query}"
+                </div>
+            `;
+            showSuggestions();
+        }
+        
+        function showSuggestions() {
+            suggestionsContainer.classList.add('show');
+        }
+        
+        function hideSuggestions() {
+            suggestionsContainer.classList.remove('show');
+            selectedIndex = -1;
+        }
+        
+        function updateSelection() {
+            const items = suggestionsContainer.querySelectorAll('.search-suggestion-item');
+            
+            items.forEach((item, index) => {
+                if (index === selectedIndex) {
+                    item.classList.add('highlighted');
+                } else {
+                    item.classList.remove('highlighted');
+                }
+            });
+        }
+        
+        function selectSuggestion(product) {
+            searchInput.value = product.name;
+            hideSuggestions();
+            
+            resultsContainer.innerHTML = `
+                <div style="background: #f7fafc; padding: 1rem; border-radius: 8px; border-left: 4px solid #667eea;">
+                    <h4>Selected Product:</h4>
+                    <p><strong>${product.name}</strong> - $${product.price.toFixed(2)}</p>
+                    <p>Category: ${product.category_name}</p>
+                    <p><em>In a real app, this would navigate to the product page.</em></p>
+                </div>
+            `;
+        }
+        
+        function highlightMatch(text, query) {
+            if (!query) return text;
+            
+            const regex = new RegExp(`(${escapeRegex(query)})`, 'gi');
+            return text.replace(regex, '<strong>$1</strong>');
+        }
+        
+        function escapeRegex(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+        
+        function handleSearch(event) {
+            event.preventDefault();
+            const query = searchInput.value.trim();
+            
+            if (query) {
+                resultsContainer.innerHTML = `
+                    <div style="background: #e6fffa; padding: 1rem; border-radius: 8px; border-left: 4px solid #38b2ac;">
+                        <h4>Search Results for: "${query}"</h4>
+                        <p><em>In a real app, this would show the full search results page.</em></p>
+                    </div>
+                `;
+                hideSuggestions();
+            }
+        }
+        
+        function testSearch(query) {
+            searchInput.value = query;
+            searchInput.focus();
+            performSearch(query);
+        }
+        
+        // Initialize
+        console.log('🔍 Search Autocomplete Test Page Loaded');
+        console.log('📊 Mock products available:', mockProducts.length);
+    </script>
+</body>
+</html>

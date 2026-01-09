@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart Add Multiple Test</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2d3748;
+            margin-bottom: 2rem;
+        }
+        
+        .product-demo {
+            background: #f7fafc;
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+        }
+        
+        .product-detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+        
+        .product-image-large {
+            background: #e2e8f0;
+            height: 300px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: #a0aec0;
+        }
+        
+        .product-info-detailed h2 {
+            color: #2d3748;
+            margin-bottom: 1rem;
+        }
+        
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        
+        .stock-info {
+            color: #38a169;
+            margin-bottom: 1.5rem;
+        }
+        
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .quantity-selector label {
+            font-weight: 500;
+            color: #4a5568;
+        }
+        
+        .quantity-decrease, .quantity-increase {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #e2e8f0;
+            background: #f7fafc;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            color: #4a5568;
+            transition: all 0.2s ease;
+        }
+        
+        .quantity-decrease:hover, .quantity-increase:hover {
+            background: #e2e8f0;
+            color: #667eea;
+        }
+        
+        .quantity-input {
+            width: 80px;
+            padding: 8px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        .cart-status {
+            background: #e6fffa;
+            border: 1px solid #38b2ac;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .cart-count {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #38b2ac;
+        }
+        
+        .test-log {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 0.875rem;
+        }
+        
+        .instructions {
+            background: #fff5f5;
+            border: 1px solid #feb2b2;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .instructions h3 {
+            color: #c53030;
+            margin-bottom: 0.5rem;
+        }
+        
+        .clear-btn {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛒 Cart Add Multiple Test</h1>
+        
+        <div class="instructions">
+            <h3>Issue Description:</h3>
+            <p>When clicking "Add to Cart" multiple times or changing the quantity selector, the cart should show the correct total quantity, not just 1.</p>
+        </div>
+        
+        <div class="product-demo">
+            <div class="product-detail-grid">
+                <div class="product-image-large">
+                    📱
+                </div>
+                
+                <div class="product-info-detailed">
+                    <h2>Test Smartphone</h2>
+                    <p class="product-price">$699.99</p>
+                    <div class="stock-info">✅ In Stock (50 available)</div>
+                    
+                    <div class="quantity-selector">
+                        <label>Quantity:</label>
+                        <button class="quantity-decrease">-</button>
+                        <input type="number" class="quantity-input" value="1" min="1" max="50">
+                        <button class="quantity-increase">+</button>
+                    </div>
+                    
+                    <button class="btn btn-primary add-to-cart-btn" 
+                            data-product-id="1">
+                        Add to Cart
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="cart-status">
+            <div class="cart-count">Cart Count: <span id="cart-count">0</span></div>
+            <div>Last Action: <span id="last-action">None</span></div>
+        </div>
+        
+        <div>
+            <button class="clear-btn" onclick="clearLog()">Clear Log</button>
+            <div id="test-log" class="test-log"></div>
+        </div>
+        
+        <div class="instructions">
+            <h3>Test Steps:</h3>
+            <ol>
+                <li>Change quantity to 3 using the + button or typing directly</li>
+                <li>Click "Add to Cart" - should add 3 items</li>
+                <li>Change quantity to 2</li>
+                <li>Click "Add to Cart" again - should add 2 more (total: 5)</li>
+                <li>Click "Add to Cart" with quantity 1 - should add 1 more (total: 6)</li>
+            </ol>
+            <p><strong>Expected Result:</strong> Cart count should show the cumulative total, not just the last quantity added.</p>
+        </div>
+    </div>
+
+    <script>
+        // Mock cart data
+        let mockCart = {};
+        let cartCount = 0;
+        
+        // Logging function
+        function log(message) {
+            const logElement = document.getElementById('test-log');
+            const timestamp = new Date().toLocaleTimeString();
+            logElement.innerHTML += `[${timestamp}] ${message}\n`;
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+        
+        function clearLog() {
+            document.getElementById('test-log').innerHTML = '';
+        }
+        
+        function updateCartDisplay() {
+            document.getElementById('cart-count').textContent = cartCount;
+        }
+        
+        // Mock add to cart function
+        function addToCart(productId, quantity, buttonElement) {
+            log(`🛒 Adding to cart: Product ${productId}, Quantity ${quantity}`);
+            
+            if (buttonElement) {
+                buttonElement.disabled = true;
+                buttonElement.textContent = 'Adding...';
+            }
+            
+            // Simulate API call
+            setTimeout(() => {
+                // Mock cart logic - add to existing quantity
+                if (mockCart[productId]) {
+                    mockCart[productId] += quantity;
+                    log(`📦 Updated existing item: Product ${productId}, New quantity: ${mockCart[productId]}`);
+                } else {
+                    mockCart[productId] = quantity;
+                    log(`✨ Added new item: Product ${productId}, Quantity: ${quantity}`);
+                }
+                
+                // Calculate total cart count
+                cartCount = Object.values(mockCart).reduce((sum, qty) => sum + qty, 0);
+                
+                updateCartDisplay();
+                document.getElementById('last-action').textContent = `Added ${quantity} items (Total: ${cartCount})`;
+                
+                log(`✅ Cart updated successfully. Total items: ${cartCount}`);
+                log(`📊 Cart contents: ${JSON.stringify(mockCart)}`);
+                
+                if (buttonElement) {
+                    buttonElement.disabled = false;
+                    buttonElement.textContent = 'Add to Cart';
+                }
+            }, 500);
+        }
+        
+        // Initialize quantity selector
+        function initializeProductQuantitySelector() {
+            const quantityContainer = document.querySelector('.quantity-selector');
+            
+            if (quantityContainer) {
+                const decreaseBtn = quantityContainer.querySelector('.quantity-decrease');
+                const increaseBtn = quantityContainer.querySelector('.quantity-increase');
+                const quantityInput = quantityContainer.querySelector('.quantity-input');
+                
+                if (decreaseBtn && increaseBtn && quantityInput) {
+                    decreaseBtn.addEventListener('click', function() {
+                        let currentValue = parseInt(quantityInput.value);
+                        if (currentValue > 1) {
+                            quantityInput.value = currentValue - 1;
+                            log(`➖ Decreased quantity to ${quantityInput.value}`);
+                        }
+                    });
+                    
+                    increaseBtn.addEventListener('click', function() {
+                        let currentValue = parseInt(quantityInput.value);
+                        const maxStock = parseInt(quantityInput.getAttribute('max'));
+                        
+                        if (!maxStock || currentValue < maxStock) {
+                            quantityInput.value = currentValue + 1;
+                            log(`➕ Increased quantity to ${quantityInput.value}`);
+                        } else {
+                            log(`⚠️ Cannot exceed maximum stock: ${maxStock}`);
+                        }
+                    });
+                    
+                    quantityInput.addEventListener('change', function() {
+                        let value = parseInt(this.value);
+                        const maxStock = parseInt(this.getAttribute('max'));
+                        
+                        if (isNaN(value) || value < 1) {
+                            this.value = 1;
+                            log(`🔧 Fixed invalid quantity to 1`);
+                        } else if (maxStock && value > maxStock) {
+                            this.value = maxStock;
+                            log(`🔧 Limited quantity to maximum stock: ${maxStock}`);
+                        } else {
+                            log(`📝 Quantity changed to ${value}`);
+                        }
+                    });
+                }
+            }
+        }
+        
+        // Initialize add to cart buttons
+        function initializeAddToCartButtons() {
+            const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
+            
+            addToCartButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const productId = this.getAttribute('data-product-id');
+                    
+                    // Get quantity from quantity selector input
+                    let quantity = 1;
+                    const quantityInput = document.querySelector('.quantity-input');
+                    if (quantityInput) {
+                        quantity = parseInt(quantityInput.value) || 1;
+                        log(`🔍 Found quantity selector with value: ${quantity}`);
+                    } else {
+                        // Fallback to data-quantity attribute
+                        quantity = parseInt(this.getAttribute('data-quantity')) || 1;
+                        log(`🔍 Using fallback quantity: ${quantity}`);
+                    }
+                    
+                    addToCart(productId, quantity, this);
+                });
+            });
+        }
+        
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeProductQuantitySelector();
+            initializeAddToCartButtons();
+            
+            log('🚀 Test page initialized');
+            log('📋 Try changing the quantity and clicking "Add to Cart"');
+            log('🎯 Expected: Cart count should accumulate (1+3=4, 4+2=6, etc.)');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+<svg width="300" height="200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="300" height="200" fill="#764ba2"/>
+  <path d="M100 60 L120 60 L130 80 L170 80 L180 60 L200 60 L200 140 L100 140 Z" fill="white"/>
+  <circle cx="150" cy="100" r="15" fill="#764ba2"/>
+  <text x="150" y="170" text-anchor="middle" fill="white" font-family="Arial" font-size="16" font-weight="bold">Clothing</text>
+</svg>

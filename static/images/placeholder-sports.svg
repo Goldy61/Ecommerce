@@ -1,0 +1,7 @@
+<svg width="300" height="200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="300" height="200" fill="#ed8936"/>
+  <circle cx="150" cy="100" r="35" fill="white"/>
+  <path d="M130 80 Q150 70 170 80 Q180 100 170 120 Q150 130 130 120 Q120 100 130 80" fill="#ed8936"/>
+  <path d="M150 65 L150 135 M115 100 L185 100" stroke="#ed8936" stroke-width="3"/>
+  <text x="150" y="170" text-anchor="middle" fill="white" font-family="Arial" font-size="16" font-weight="bold">Sports</text>
+</svg>
